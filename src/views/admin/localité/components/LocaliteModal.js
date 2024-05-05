@@ -13,47 +13,51 @@ import {
     Box,
     Input,
     Textarea,
+    RadioGroup,
+    Stack,
+    Radio,
+    Flex,
 } from "@chakra-ui/react";
+import { AddIcon } from "@chakra-ui/icons";
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
+import { InputGroup, InputLeftAddon } from "@chakra-ui/react";
 
 const animatedComponents = makeAnimated();
 
-export default function LocaliteModal({ groups,loading, isManual = true, title, isOpen, onOpen, onClose, campaign, label, handleEditCampaign, handleAddCampaign, type }) {
+const LocaliteModal = ({ offers, loading, isEdit = false, selectedService, isOpen, onClose, onOpen, handleEditService, handleAddService, isRegion, isArrondissement, isVille }) => {
+    const [isGardeSelected, setIsGardeSelected] = useState(false);
+    const [selectedOffer, setSelectedOffer] = useState([]);
+    const [previousSelectedOffer, setPreviousSelectedOffer] = useState([]);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [period, setPeriod] = useState(null);
-    const [selectedGroup, setSelectedGroup] = useState([]);
-    const [previousGroup, setPreviousGroup] = useState([]);
+
+    const initialRef = React.useRef(null)
+    const finalRef = React.useRef(null)
 
     useEffect(() => {
-        if (campaign) {
-            setName(campaign.name || '');
-            setDescription(campaign.description || '');
-            const foundPeriod = periodList.find(p => p.value === p.value);
-            if (foundPeriod) {
-                setPeriod(foundPeriod); 
-            }
-            const groupsArray = campaign.groups.map(group => ({
-                value: group._id,
-                label: group.name
-            }));
-    
-            setSelectedGroup(groupsArray);
-            setPreviousGroup(groupsArray);
-        }
-    }, [campaign]);
+        // Mettez à jour les champs du formulaire lorsque selectedService change
+        if (selectedService) {
+            setName(selectedService.name || '');
+            setDescription(selectedService.description || '');
 
-    const groupForm = groups?.map((ele) => {
+            // Créez un tableau d'objets représentant les offres
+            const offersArray = selectedService.offers.map(offer => ({
+                value: offer._id,
+                label: offer.name
+            }));
+
+            setSelectedOffer(offersArray);
+            setPreviousSelectedOffer(offersArray);
+        }
+    }, [selectedService]);
+
+    const offer = offers?.map((ele) => {
         return {
             value: ele._id,
             label: ele.name
         }
     });
-const handleGroupChange = (selectedOptions) => {
-    setSelectedGroup(selectedOptions);
-    };
-const groupValues = selectedGroup.map((group) => group.value);
 
     let handleNameChange = (e) => {
         let inputValue = e.target.value
@@ -65,101 +69,135 @@ const groupValues = selectedGroup.map((group) => group.value);
         setDescription(inputValue)
     }
 
-    let handlePeriodChange = (selectedOption) => {
-        setPeriod(selectedOption); 
-    }
+    const handleOfferChange = (selectedOptions) => {
+        setSelectedOffer(selectedOptions);
+    };
+
+    const offerValues = selectedOffer.map((offer) => offer.value);
 
     const handleEditClick = () => {
-        handleEditCampaign(campaign._id, { name, description, period, groups: groupValues, type });
-        if (selectedGroup.length !== previousGroup.length) {
-            setSelectedGroup(previousGroup);
-        }
+        // Appeler la fonction handleEdit et passer les valeurs de title et description
+        handleEditService(selectedService._id, { name, description, offers: offerValues });
     };
 
     const handleAddClick = () => {
-        if (isManual) {
-            handleAddCampaign({ name, description, groups: groupValues, type });
-            setName('');
-            setDescription('');
-            setSelectedGroup([]);
-            // onClose();
-        } else {
-            handleAddCampaign({ name, description, period, groups: groupValues, type });
-            setName('');
-            setDescription('');
-            setPeriod('');
-            setSelectedGroup([]);
-            // onClose();
-        }
+        // Appeler la fonction handleEdit et passer les valeurs de title et description
+        handleAddService({ name, description, offers: offerValues });
+        setName('');
+        setDescription('');
+        setSelectedOffer([]);
     };
 
-    const periodList = [
-        { value: 'daily', label: 'Journalier' },
-        { value: 'weekly', label: 'Hebdomadaire' },
-        { value: 'monthly', label: 'Mensuel' }
-    ];
+    const handleGardeChange = (value) => {
+        setIsGardeSelected(value === '1');
+    };
 
-    const initialRef = React.useRef(null)
-    const finalRef = React.useRef(null)
+    const handleCloseModal = () => {
+        if (selectedOffer.length !== previousSelectedOffer.length) {
+            setSelectedOffer(previousSelectedOffer);
+        }
+        onClose();
+    };
 
     return (
-        <Box >
+        <Box>
+            {!isEdit && (
+                <Button
+                    onClick={onOpen}
+                    leftIcon={<AddIcon />}
+                    colorScheme="blue"
+                    style={{ fontSize: "12px" }}
+                >
+                    AJOUTER
+                </Button>
+            )}
+
             <Modal
                 initialFocusRef={initialRef}
                 finalFocusRef={finalRef}
                 isOpen={isOpen}
-                onClose={onClose}
+                onClose={handleCloseModal}
+                isCentered
             >
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>{title}</ModalHeader>
+                    <ModalHeader>{isEdit ? "Modifier une localité" : "Ajouter une localité"}</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody pb={6}>
-                        <FormControl>
-                            <FormLabel>Titre</FormLabel>
-                            <Input ref={initialRef} placeholder='Titre de la campagne' value={name} onChange={handleNameChange} />
-                        </FormControl>
-
-                        <FormControl mt={4}>
-                            <FormLabel>Description</FormLabel>
-                            <Textarea placeholder='Description de la campagne' value={description} onChange={handleDescriptionChange} />
-                        </FormControl>
-                        {!isManual && (
-                            <FormControl mt={4}>
-                                <FormLabel>Périodicité</FormLabel>
-                                <Select
-                                    variant='filled'
-                                    placeholder='Sélectionnez la période de la campagne'
-                                    value={period}
-                                    isMulti={false}
-                                    onChange={handlePeriodChange}
-                                    options={periodList}
-                                    components={animatedComponents}
-                                />
-                            </FormControl>
+                        {isRegion && (
+                            <>
+                                <FormControl>
+                                    <FormLabel>Nom</FormLabel>
+                                    <Input ref={initialRef} placeholder='Nom de la région' value={name} onChange={handleNameChange} />
+                                </FormControl>
+                                <FormControl mt={4}>
+                                    <FormLabel>Code postal</FormLabel>
+                                    <Input placeholder='Code postal de la région' value={name} onChange={handleNameChange} />
+                                </FormControl>
+                                <FormControl mt={4}>
+                                    <FormLabel>Pays</FormLabel>
+                                    <Input ref={initialRef} placeholder='Pays de la région' value={name} onChange={handleNameChange} />
+                                </FormControl>
+                                <FormControl mt={4}>
+                                    <FormLabel>Description</FormLabel>
+                                    <Textarea placeholder='Description de la région' value={name} onChange={handleNameChange} />
+                                </FormControl>
+                            </>
                         )}
-                        <FormControl mt={4}>
-                            <FormLabel>Groupe</FormLabel>
-                            <Select
-                                variant='filled'
-                                placeholder='Sélectionnez les groupes'
-                                value={selectedGroup}
-                                isMulti
-                                onChange={handleGroupChange}
-                                options={groupForm}
-                                components={animatedComponents}
-                            />
-                        </FormControl>
+
+                        {isArrondissement && (
+                            <>
+                                <FormControl>
+                                    <FormLabel>Nom</FormLabel>
+                                    <Input ref={initialRef} placeholder="Nom de l'arrondissement" value={name} onChange={handleNameChange} />
+                                </FormControl>
+                                <FormControl mt={4}>
+                                    <FormLabel>Code postal</FormLabel>
+                                    <Input placeholder="Code postal de l'arrondissement" value={name} onChange={handleNameChange} />
+                                </FormControl>
+                                <FormControl mt={4}>
+                                    <FormLabel>Région Parente</FormLabel>
+                                    <Input ref={initialRef} placeholder="Région parente de l'arrondissement" value={name} onChange={handleNameChange} />
+                                </FormControl>
+                                <FormControl mt={4}>
+                                    <FormLabel>Description</FormLabel>
+                                    <Textarea placeholder="Description de l'arrondissement" value={name} onChange={handleNameChange} />
+                                </FormControl>
+                            </>
+                        )}
+
+                        {isVille && (
+                            <>
+                                <FormControl>
+                                    <FormLabel>Nom</FormLabel>
+                                    <Input ref={initialRef} placeholder='Nom de la ville' value={name} onChange={handleNameChange} />
+                                </FormControl>
+                                <FormControl mt={4}>
+                                    <FormLabel>Code postal</FormLabel>
+                                    <Input placeholder='Code postal de la villes' value={name} onChange={handleNameChange} />
+                                </FormControl>
+                                <FormControl mt={4}>
+                                    <FormLabel>Arrondissement Parent</FormLabel>
+                                    <Input ref={initialRef} placeholder='Arrondissement parent de la ville' value={name} onChange={handleNameChange} />
+                                </FormControl>
+                                <FormControl mt={4}>
+                                    <FormLabel>Description</FormLabel>
+                                    <Textarea placeholder='Description de la ville' value={name} onChange={handleNameChange} />
+                                </FormControl>
+                            </>
+                        )}
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button colorScheme='blue' mr={3} onClick={label === 'Modifier' ? handleEditClick : handleAddClick} isLoading={loading} disabled={!name || !description || (!isManual && (!period || !period.value)) || !selectedGroup.length}>
-                            {label}
+                        <Button colorScheme='blue' mr={3} onClick={isEdit ? handleEditClick : handleAddClick} isLoading={loading} disabled={!name || !description || !selectedOffer.length}>
+                            {isEdit ? "Modifier" : "Ajouter"}
                         </Button>
-                        <Button colorScheme='red' onClick={onClose}>Annuler</Button>
+                        <Button colorScheme='red' onClick={handleCloseModal}>Annuler</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
         </Box>
     )
 }
+
+export default LocaliteModal;

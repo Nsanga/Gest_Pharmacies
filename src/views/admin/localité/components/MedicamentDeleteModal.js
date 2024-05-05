@@ -15,12 +15,12 @@ import {
 } from "@chakra-ui/react";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
-import { deleteCampaign } from "redux/campagne/action";
+import { deleteService } from "redux/service/action";
 
-const LocalitéDeleteModal = ({ campaign, isOpen, onClose, loading, type }) => {
+const MedicamentDeleteModal = ({ service, isOpen, onClose, loading }) => {
     const dispatch = useDispatch();
     const handleDelete = () => {
-        dispatch(deleteCampaign(campaign._id, type))
+        dispatch(deleteService(service._id))
     }
 
     return (
@@ -30,10 +30,10 @@ const LocalitéDeleteModal = ({ campaign, isOpen, onClose, loading, type }) => {
                 <ModalCloseButton />
                 <ModalHeader>Suppression</ModalHeader>
                 <ModalBody pb={6}>
-                    <Text>Confirmez-vous la suppression de cette campagne?</Text>
+                    <Text>Confirmez-vous la suppression de cette pharmacie?</Text>
                 </ModalBody>
                 <ModalFooter>
-                    <Button colorScheme='blue' mr={3} onClick={handleDelete} isLoading={loading}>Confirmer</Button>
+                    <Button colorScheme='blue' mr={3} onClick={handleDelete} isLoading={loading} >Confirmer</Button>
                     <Button colorScheme='red' onClick={onClose}>Annuler</Button>
                 </ModalFooter>
             </ModalContent>
@@ -41,4 +41,4 @@ const LocalitéDeleteModal = ({ campaign, isOpen, onClose, loading, type }) => {
     )
 }
 
-export default LocalitéDeleteModal;
+export default MedicamentDeleteModal;
