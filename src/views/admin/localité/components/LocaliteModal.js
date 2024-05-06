@@ -186,7 +186,7 @@ const LocaliteModal = ({ offers, loading, isEdit = false, selectedService, isOpe
                                 </FormControl>
                             </>
                         )}
-                    </ModalBody>
+                    </ModalBody> 
 
                     <ModalFooter>
                         <Button colorScheme='blue' mr={3} onClick={isEdit ? handleEditClick : handleAddClick} isLoading={loading} disabled={!name || !description || !selectedOffer.length}>

@@ -1,16 +1,16 @@
 import { combineReducers } from 'redux';
-import CampaignReducer from 'redux/campagne/reducer';
 import PlateformeReducer from 'redux/plateforme/reducer';
-import ServiceReducer from 'redux/service/reducer';
+import PharmacieReducer from 'redux/pharmacie/reducer';
 import UserReducer from 'redux/user/reducer';
+import MedicamentReducer from 'redux/medicament/reducer';
 
 /**
  * @description combine reducers
  */
 const rootReducer = combineReducers({
   PlateformeReducer,
-  ServiceReducer,
-  CampaignReducer,
+  PharmacieReducer,
+  MedicamentReducer,
   UserReducer,
 });
 

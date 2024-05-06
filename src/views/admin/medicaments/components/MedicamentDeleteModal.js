@@ -13,14 +13,13 @@ import {
     Flex,
     Icon,
 } from "@chakra-ui/react";
-import { FaRegCircleCheck } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
-import { deleteService } from "redux/service/action";
+import { deleteMedicament } from "redux/medicament/action";
 
-const MedicamentDeleteModal = ({ service, isOpen, onClose, loading }) => {
+const MedecinDeleteModal = ({ medicament, isOpen, onClose, loading }) => {
     const dispatch = useDispatch();
     const handleDelete = () => {
-        dispatch(deleteService(service._id))
+        dispatch(deleteMedicament(medicament._id))
     }
 
     return (
@@ -30,7 +29,7 @@ const MedicamentDeleteModal = ({ service, isOpen, onClose, loading }) => {
                 <ModalCloseButton />
                 <ModalHeader>Suppression</ModalHeader>
                 <ModalBody pb={6}>
-                    <Text>Confirmez-vous la suppression de cette pharmacie?</Text>
+                    <Text>Confirmez-vous la suppression de ce medicament?</Text>
                 </ModalBody>
                 <ModalFooter>
                     <Button colorScheme='blue' mr={3} onClick={handleDelete} isLoading={loading} >Confirmer</Button>
@@ -41,4 +40,4 @@ const MedicamentDeleteModal = ({ service, isOpen, onClose, loading }) => {
     )
 }
 
-export default MedicamentDeleteModal;
+export default MedecinDeleteModal;

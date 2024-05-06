@@ -25,77 +25,145 @@ import { InputGroup, InputLeftAddon } from "@chakra-ui/react";
 
 const animatedComponents = makeAnimated();
 
-const PharmacieModal = ({ offers, loading, isEdit = false, selectedService, isOpen, onClose, onOpen, handleEditService, handleAddService }) => {
-    const [isGardeSelected, setIsGardeSelected] = useState(false);
-    const [selectedOffer, setSelectedOffer] = useState([]);
-    const [previousSelectedOffer, setPreviousSelectedOffer] = useState([]);
+const PharmacieModal = ({ loading, isEdit = false, selectedPharmacie, isOpen, onClose, onOpen, handleEditPharmacie, handleAddService }) => {
     const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
+    const [type, setType] = useState(null);
+    const [email, setEmail] = useState('');
+    const [telephone, setTelephone] = useState('');
+    const [localite, setLocalite] = useState(null);
+    const [adresse, setAdresse] = useState('');
+    const [openHour, setOpenHour] = useState('');
+    const [closeHour, setCloseHour] = useState('');
+    const [isEmergencyPharmacy, setIsEmergencyPharmacy] = useState(false);
 
     const initialRef = React.useRef(null)
     const finalRef = React.useRef(null)
 
+    const fakeTypes = [
+        { _id: 1, name: "Moderne" },
+        { _id: 2, name: "Traditionnelle" },
+    ];
+
+    const typeOptions = fakeTypes.map((type) => ({
+        value: type._id,
+        label: type.name,
+    }));
+
+    const fakeLocalites = [
+        { _id: 1, name: "Localité 1" },
+        { _id: 2, name: "Localité 2" },
+        { _id: 3, name: "Localité 3" },
+        { _id: 4, name: "yaounde" },
+    ];
+
+    const localiteOptions = fakeLocalites.map((localite) => ({
+        value: localite._id,
+        label: localite.name,
+    }));
+
     useEffect(() => {
-        // Mettez à jour les champs du formulaire lorsque selectedService change
-        if (selectedService) {
-            setName(selectedService.name || '');
-            setDescription(selectedService.description || '');
-
-            // Créez un tableau d'objets représentant les offres
-            const offersArray = selectedService.offers.map(offer => ({
-                value: offer._id,
-                label: offer.name
-            }));
-
-            setSelectedOffer(offersArray);
-            setPreviousSelectedOffer(offersArray);
+        if (selectedPharmacie) {
+            setName(selectedPharmacie.name || '');
+            const foundType = typeOptions.find(type => type.label === selectedPharmacie.type);
+            if (foundType) {
+                setType(foundType);
+            }
+            setEmail(selectedPharmacie.email || '');
+            setTelephone(selectedPharmacie.phone || '');
+            const foundLocality = localiteOptions.find(locality => locality.label === selectedPharmacie.locality);
+            if (foundLocality) {
+                setLocalite(foundLocality);
+            }
+            setAdresse(selectedPharmacie.adress || '');
+            setOpenHour(selectedPharmacie.OpenHour || '');
+            setCloseHour(selectedPharmacie.CloseHour || '');
+            setIsEmergencyPharmacy(selectedPharmacie.isEmergencyPharmacy || false);
         }
-    }, [selectedService]);
-
-    const offer = offers?.map((ele) => {
-        return {
-            value: ele._id,
-            label: ele.name
-        }
-    });
+    }, [selectedPharmacie]);
 
     let handleNameChange = (e) => {
         let inputValue = e.target.value
         setName(inputValue)
     }
 
-    let handleDescriptionChange = (e) => {
-        let inputValue = e.target.value
-        setDescription(inputValue)
+    let handleTypeChange = (selectedOption) => {
+        setType(selectedOption)
     }
 
-    const handleOfferChange = (selectedOptions) => {
-        setSelectedOffer(selectedOptions);
-    };
+    let handleEmailChange = (e) => {
+        let inputValue = e.target.value
+        setEmail(inputValue)
+    }
 
-    const offerValues = selectedOffer.map((offer) => offer.value);
+    let handleTelephoneChange = (e) => {
+        let inputValue = e.target.value
+        setTelephone(inputValue)
+    }
+
+    let handleLocaliteChange = (selectedOption) => {
+        setLocalite(selectedOption)
+    }
+
+    let handleAdresseChange = (e) => {
+        let inputValue = e.target.value
+        setAdresse(inputValue)
+    }
+
+    let handleOpenHourChange = (e) => {
+        let inputValue = e.target.value
+        setOpenHour(inputValue)
+    }
+
+    let handleCloseHourChange = (e) => {
+        let inputValue = e.target.value
+        setCloseHour(inputValue)
+    }
+
+    const handleGardeChange = (value) => {
+        const newValue = value === '1';
+        setIsEmergencyPharmacy(newValue);
+    };
 
     const handleEditClick = () => {
         // Appeler la fonction handleEdit et passer les valeurs de title et description
-        handleEditService(selectedService._id, { name, description, offers: offerValues });
+        handleEditPharmacie(selectedPharmacie._id, {
+            name,
+            type: type.label,
+            email,
+            phone: telephone,
+            locality: localite.label,
+            adress: adresse,
+            OpenHour: openHour,
+            CloseHour: closeHour,
+            isEmergencyPharmacy
+        });
     };
 
     const handleAddClick = () => {
         // Appeler la fonction handleEdit et passer les valeurs de title et description
-        handleAddService({ name, description, offers: offerValues });
+        handleAddService({
+            name,
+            type: type.label,
+            email,
+            phone: telephone,
+            locality: localite.label,
+            adress: adresse,
+            OpenHour: openHour,
+            CloseHour: closeHour,
+            isEmergencyPharmacy
+        });
         setName('');
-        setDescription('');
-        setSelectedOffer([]);
-    };
-
-    const handleGardeChange = (value) => {
-        setIsGardeSelected(value === '1');
+        setType('');
+        setEmail('');
+        setTelephone('');
+        setLocalite('');
+        setAdresse('');
+        setOpenHour('');
+        setCloseHour('')
+        setIsEmergencyPharmacy(false);
     };
 
     const handleCloseModal = () => {
-        if (selectedOffer.length !== previousSelectedOffer.length) {
-            setSelectedOffer(previousSelectedOffer);
-        }
         onClose();
     };
 
@@ -131,68 +199,80 @@ const PharmacieModal = ({ offers, loading, isEdit = false, selectedService, isOp
                         </FormControl>
 
                         <FormControl mt={4}>
+                            <FormLabel>Type</FormLabel>
+                            <Select
+                                variant='filled'
+                                placeholder='Sélectionnez le type de pharmacie'
+                                value={type}
+                                onChange={handleTypeChange}
+                                options={typeOptions}
+                                components={animatedComponents}
+                            />
+                        </FormControl>
+
+                        <FormControl mt={4}>
+                            <FormLabel>Email</FormLabel>
+                            <Input placeholder='Email du pharmacien' value={email} onChange={handleEmailChange} type="email" />
+                        </FormControl>
+
+                        <FormControl mt={4}>
+                            <FormLabel>Téléphone</FormLabel>
+                            <Input placeholder='Téléphone du pharmacien' value={telephone} onChange={handleTelephoneChange} />
+                        </FormControl>
+
+                        <FormControl mt={4}>
                             <FormLabel>Localité</FormLabel>
                             <Select
                                 variant='filled'
-                                placeholder='Sélectionnez les localités'
-                                value={selectedOffer}
-                                isMulti
-                                onChange={handleOfferChange}
-                                options={offer}
+                                placeholder='Sélectionnez la localité'
+                                value={localite}
+                                onChange={handleLocaliteChange}
+                                options={localiteOptions}
                                 components={animatedComponents}
                             />
                         </FormControl>
 
                         <FormControl mt={4}>
-                            <FormLabel>Liste des médicaments</FormLabel>
-                            <Select
-                                variant='filled'
-                                placeholder='Sélectionnez les medicaments disponibles'
-                                value={selectedOffer}
-                                isMulti
-                                onChange={handleOfferChange}
-                                options={offer}
-                                components={animatedComponents}
-                            />
+                            <FormLabel>Adresse</FormLabel>
+                            <Input placeholder='Adresse de la pharmacie' value={adresse} onChange={handleAdresseChange} />
                         </FormControl>
 
                         <FormControl mt={4}>
-                            <Flex>
-                                <FormLabel>pharmacies de garde?</FormLabel>
-                                <RadioGroup defaultValue='2' onChange={handleGardeChange}>
-                                    <Stack spacing={5} direction='row'>
-                                        <Radio colorScheme='blue' value='1'>
-                                            Oui
-                                        </Radio>
-                                        <Radio colorScheme='red' value='2'>
-                                            Non
-                                        </Radio>
-                                    </Stack>
-                                </RadioGroup>
-                            </Flex>
+                            <FormLabel>Heure d'ouverture</FormLabel>
+                            <InputGroup >
+                                <InputLeftAddon children="Ouverture" />
+                                <Input type="time" onChange={handleOpenHourChange} value={openHour} />
+                            </InputGroup>
                         </FormControl>
 
-                        {isGardeSelected && (
-                            <FormControl mt={4}>
-                                <FormLabel>Plages horaires de garde</FormLabel>
-                                <Flex alignItems='center' justifyContent='center' gap={4}>
-                                    <InputGroup >
-                                        <InputLeftAddon children="Début" />
-                                        <Input type="time" />
-                                    </InputGroup>
-                                    <InputGroup >
-                                        <InputLeftAddon children="Fin" />
-                                        <Input type="time" />
-                                    </InputGroup>
-                                </Flex>
-                            </FormControl>
-                        )}
+                        <FormControl mt={4}>
+                            <FormLabel>Heure de fermeture</FormLabel>
+                            <InputGroup >
+                                <InputLeftAddon children="Fermeture" />
+                                <Input type="time" onChange={handleCloseHourChange} value={closeHour} />
+                            </InputGroup>
+                        </FormControl>
+
+                        <FormControl mt={4}>
+                            <FormLabel>pharmacies de garde?</FormLabel>
+                            <RadioGroup value={isEmergencyPharmacy ? '1' : '2'} onChange={handleGardeChange}>
+                                <Stack spacing={5} direction='row'>
+                                    <Radio colorScheme='blue' value='1'>
+                                        Oui
+                                    </Radio>
+                                    <Radio colorScheme='red' value='2'>
+                                        Non
+                                    </Radio>
+                                </Stack>
+                            </RadioGroup>
+                        </FormControl>
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button colorScheme='blue' mr={3} onClick={isEdit ? handleEditClick : handleAddClick} isLoading={loading} disabled={!name || !description || !selectedOffer.length}>
+                        <Button colorScheme='blue' mr={3} onClick={isEdit ? handleEditClick : handleAddClick} isLoading={loading} disabled={!name || !type || !email || !telephone || !localite || !adresse || !openHour || !closeHour}>
                             {isEdit ? "Modifier" : "Ajouter"}
                         </Button>
+
                         <Button colorScheme='red' onClick={handleCloseModal}>Annuler</Button>
                     </ModalFooter>
                 </ModalContent>

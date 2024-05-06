@@ -25,7 +25,7 @@ const routes = [
     component: MainDashboard,
   },
   {
-    name: "Gestion des pharmacies",
+    name: "Pharmacies",
     layout: "/admin",
     path: "/pharmacies",
     icon: (
@@ -35,14 +35,14 @@ const routes = [
     secondary: true,
   },
   {
-    name: "Gestion des médicaments",
+    name: "Médicaments",
     layout: "/admin",
     icon: <Icon as={FaHandHoldingMedical} width='20px' height='20px' color='inherit' />,
     path: "/medicaments",
     component: Médicaments,
   },
   {
-    name: "Gestion des localités",
+    name: "Localités",
     layout: "/admin",
     path: "/localités",
     icon: <Icon as={BiSolidLocationPlus} width='20px' height='20px' color='inherit' />,

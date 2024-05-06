@@ -12,47 +12,31 @@ import {
     TabPanel,
 } from "@chakra-ui/react";
 import Card from "components/card/Card.js";
-import MedicamentsModal from "./components/MedicamentsModal";
-import Services from "./components/Services";
+import MedicamentModal from "./components/MedicamentsModal";
+import Medicaments from "./components/Medicaments";
 import { connect, useDispatch } from "react-redux";
 import EmptyData from "components/emptyData";
-import { listServices } from "redux/service/action";
-import { AddIcon } from "@chakra-ui/icons";
-import { listOffers } from "redux/service/action";
-import { AddService } from "redux/service/action";
-import Offres from "./components/Offres";
-import OfferModal from "./components/OfferModal";
-import { AddOffer } from "redux/service/action";
+import { listMedicaments } from "redux/medicament/action";
+import { AddMedicament } from "redux/medicament/action";
+import { listPharmacie } from "redux/pharmacie/action";
 
-const Medicaments = ({ services, loading, offers }) => {
-    const [isMedicamentsModalOpen, setIsMedicamentsModalOpen] = useState(false);
-    const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
-    const cardShadow = useColorModeValue(
-        "0px 18px 40px rgba(112, 144, 176, 0.12)",
-        "unset"
-    );
-
-    console.log("?????", offers)
-
+const Pharmacie = ({ medicaments, loading, pharmacies }) => {
+    const [isMedicamentsOpen, setIsMedicamentsOpen] = useState(false);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(listServices());
-        dispatch(listOffers());
+        dispatch(listMedicaments());
+        dispatch(listPharmacie());
     }, [dispatch]);
 
     const handleAddService = (addData) => {
-        dispatch(AddService(addData));
-    };
-
-    const handleAddOffer = (addData) => {
-        dispatch(AddOffer(addData));
+        console.log(addData)
+        dispatch(AddMedicament(addData));
     };
 
     useEffect(() => {
         if (!loading) {
-            setIsMedicamentsModalOpen(false)
-            setIsOfferModalOpen(false)
+            setIsMedicamentsOpen(false)
         }
     }, [loading]);
 
@@ -60,24 +44,24 @@ const Medicaments = ({ services, loading, offers }) => {
         <Card mt="100px">
             <Tabs variant="enclosed">
                 <TabList>
-                    <Tab>Medicaments</Tab>
-                    <Tab>Suivi des medicaments</Tab>
+                    <Tab>Médicaments</Tab>
+                    <Tab>Suivi des médicaments</Tab>
                 </TabList>
 
                 <TabPanels>
                     <TabPanel>
                         <Flex justifyContent={"flex-end"} marginBottom={6}>
-                            <MedicamentsModal
+                            <MedicamentModal
                                 isEdit={false}
-                                onOpen={() => setIsMedicamentsModalOpen(true)}
-                                isOpen={isMedicamentsModalOpen}
-                                onClose={() => setIsMedicamentsModalOpen(false)}
-                                services={services}
-                                offers={offers}
+                                onOpen={() => setIsMedicamentsOpen(true)}
+                                isOpen={isMedicamentsOpen}
+                                onClose={() => setIsMedicamentsOpen(false)}
+                                medicaments={medicaments}
+                                pharmacies={pharmacies}
                                 loading={loading}
                                 handleAddService={handleAddService} />
                         </Flex>
-                        {/* {
+                        {
                             loading ? (
                                 <Flex alignItems='center' justifyContent='center'>
                                     <Spinner color='blue.500' size='xl' />
@@ -85,25 +69,25 @@ const Medicaments = ({ services, loading, offers }) => {
                             ) : (
                                 <>
                                     {
-                                        services.length === 0 ? (
+                                        medicaments.length === 0 ? (
                                             <EmptyData />
                                         ) : (
-                                            <Services
-                                                boxShadow={cardShadow}
+                                            <Medicaments
                                                 mb="20px"
-                                                services={services}
-                                                offers={offers}
+                                                medicaments={medicaments}
+                                                pharmacies={pharmacies}
                                                 loading={loading}
+                                                isList
                                             />
                                         )
                                     }
 
                                 </>
                             )
-                        } */}
+                        }
                     </TabPanel>
                     <TabPanel>
-                        {/* {
+                        {
                             loading ? (
                                 <Flex alignItems='center' justifyContent='center'>
                                     <Spinner color='blue.500' size='xl' />
@@ -111,21 +95,21 @@ const Medicaments = ({ services, loading, offers }) => {
                             ) : (
                                 <>
                                     {
-                                        offers.length === 0 ? (
+                                        medicaments.length === 0 ? (
                                             <EmptyData />
                                         ) : (
-                                            <Offres
-                                                boxShadow={cardShadow}
+                                            <Medicaments
                                                 mb="20px"
-                                                offers={offers}
                                                 loading={loading}
+                                                medicaments={medicaments}
+                                                isList={false}
                                             />
                                         )
                                     }
 
                                 </>
                             )
-                        } */}
+                        }
                     </TabPanel>
                 </TabPanels>
             </Tabs>
@@ -134,10 +118,10 @@ const Medicaments = ({ services, loading, offers }) => {
     );
 }
 
-const mapStateToProps = ({ ServiceReducer }) => ({
-    services: ServiceReducer.services,
-    loading: ServiceReducer.loading,
-    offers: ServiceReducer.offers,
+const mapStateToProps = ({ MedicamentReducer, PharmacieReducer }) => ({
+    medicaments: MedicamentReducer.medicaments,
+    loading: MedicamentReducer.loading,
+    pharmacies: PharmacieReducer.pharmacies,
 });
 
-export default connect(mapStateToProps)(Medicaments);
+export default connect(mapStateToProps)(Pharmacie);

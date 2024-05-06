@@ -1,8 +1,8 @@
 import { all } from 'redux-saga/effects';
-import CampaignSaga from 'redux/campagne/saga';
 import PlateformeSaga from 'redux/plateforme/saga';
-import ServiceSaga from 'redux/service/saga';
+import PharmacieSaga from 'redux/pharmacie/saga';
 import UserSaga from 'redux/user/saga';
+import MedicamentSaga from 'redux/medicament/saga';
 
 /**
  * @description combine sagas
@@ -10,8 +10,8 @@ import UserSaga from 'redux/user/saga';
 export default function* Sagas() {
   yield all([
     PlateformeSaga(),
-    ServiceSaga(),
-    CampaignSaga(),
+    PharmacieSaga(),
+    MedicamentSaga(),
     UserSaga(),
   ]);
 }

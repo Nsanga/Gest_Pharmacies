@@ -25,34 +25,30 @@ import { InputGroup, InputLeftAddon } from "@chakra-ui/react";
 
 const animatedComponents = makeAnimated();
 
-const MedicamentModal = ({ offers, loading, isEdit = false, selectedService, isOpen, onClose, onOpen, handleEditService, handleAddService }) => {
-    const [isGardeSelected, setIsGardeSelected] = useState(false);
-    const [selectedOffer, setSelectedOffer] = useState([]);
-    const [previousSelectedOffer, setPreviousSelectedOffer] = useState([]);
+const MedicamentsModal = ({ pharmacies, loading, isEdit = false, selectedMedicament, isOpen, onClose, onOpen, handleEditMedicament, handleAddMedicament }) => {
     const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
+    const [price, setPrice] = useState('');
+    const [selectedPharmacie, setSelectedPharmacie] = useState([]);
+    const [previousSelectedPharmacie, setPreviousSelectedPharmacie] = useState([]);
 
     const initialRef = React.useRef(null)
     const finalRef = React.useRef(null)
 
     useEffect(() => {
-        // Mettez à jour les champs du formulaire lorsque selectedService change
-        if (selectedService) {
-            setName(selectedService.name || '');
-            setDescription(selectedService.description || '');
-
-            // Créez un tableau d'objets représentant les offres
-            const offersArray = selectedService.offers.map(offer => ({
-                value: offer._id,
-                label: offer.name
+        if (selectedMedicament) {
+            setName(selectedMedicament.name || '');
+            setPrice(selectedMedicament.price || '');
+            const pharmacieArray = selectedMedicament.pharmacies.map(pharmacie => ({
+                value: pharmacie._id,
+                label: pharmacie.name
             }));
-
-            setSelectedOffer(offersArray);
-            setPreviousSelectedOffer(offersArray);
+    
+            setSelectedPharmacie(pharmacieArray);
+            setPreviousSelectedPharmacie(pharmacieArray);
         }
-    }, [selectedService]);
+    }, [selectedMedicament]);
 
-    const offer = offers?.map((ele) => {
+    const pharmacie = pharmacies?.map((ele) => {
         return {
             value: ele._id,
             label: ele.name
@@ -64,38 +60,39 @@ const MedicamentModal = ({ offers, loading, isEdit = false, selectedService, isO
         setName(inputValue)
     }
 
-    let handleDescriptionChange = (e) => {
+    let handlePriceChange = (e) => {
         let inputValue = e.target.value
-        setDescription(inputValue)
+        setPrice(inputValue)
     }
 
-    const handleOfferChange = (selectedOptions) => {
-        setSelectedOffer(selectedOptions);
+    const handlePharmacieChange = (selectedOptions) => {
+        setSelectedPharmacie(selectedOptions);
     };
 
-    const offerValues = selectedOffer.map((offer) => offer.value);
+    const pharmacieValues = selectedPharmacie.map((pharmacie) => pharmacie.value);
 
     const handleEditClick = () => {
         // Appeler la fonction handleEdit et passer les valeurs de title et description
-        handleEditService(selectedService._id, { name, description, offers: offerValues });
+        handleEditMedicament(selectedMedicament._id, {
+            name,
+            price,
+            pharmacies: pharmacieValues,
+        });
     };
 
     const handleAddClick = () => {
         // Appeler la fonction handleEdit et passer les valeurs de title et description
-        handleAddService({ name, description, offers: offerValues });
+        handleAddMedicament({
+            name,
+            price,
+            pharmacies: pharmacieValues,
+        });
         setName('');
-        setDescription('');
-        setSelectedOffer([]);
-    };
-
-    const handleGardeChange = (value) => {
-        setIsGardeSelected(value === '1');
+        setPrice('');
+        setSelectedPharmacie([]);
     };
 
     const handleCloseModal = () => {
-        if (selectedOffer.length !== previousSelectedOffer.length) {
-            setSelectedOffer(previousSelectedOffer);
-        }
         onClose();
     };
 
@@ -117,84 +114,42 @@ const MedicamentModal = ({ offers, loading, isEdit = false, selectedService, isO
                 finalFocusRef={finalRef}
                 isOpen={isOpen}
                 onClose={handleCloseModal}
-                scrollBehavior='inside'
                 isCentered
             >
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>{isEdit ? "Modifier un médicament" : "Ajouter un médicament"}</ModalHeader>
+                    <ModalHeader>{isEdit ? "Modifier une pharmacie" : "Ajouter une pharmacie"}</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody pb={6}>
-                        <Flex gap={4}>
                         <FormControl>
                             <FormLabel>Nom</FormLabel>
-                            <Input ref={initialRef} placeholder='Nom du médicament' value={name} onChange={handleNameChange} />
+                            <Input ref={initialRef} placeholder='Nom du medicament' value={name} onChange={handleNameChange} />
                         </FormControl>
-                        <FormControl>
-                            <FormLabel>Code</FormLabel>
-                            <Input placeholder='Code du médicaments' value={name} onChange={handleNameChange} />
-                        </FormControl>
-                        </Flex>
-
-                        <FormControl>
-                            <FormLabel>Description</FormLabel>
-                            <Textarea placeholder='Description du médicament' value={name} onChange={handleNameChange} />
-                        </FormControl>
-
-                        <Flex gap={4} mt={4}>
-                        <FormControl>
-                            <FormLabel>Dosage</FormLabel>
-                            <Input placeholder='Dosage du médicament' value={name} onChange={handleNameChange} />
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>Forme</FormLabel>
-                            <Input placeholder='Forme du médicaments' value={name} onChange={handleNameChange} />
-                        </FormControl>
-                        </Flex>
-
-                        <Flex gap={4} mt={4}>
-                        <FormControl>
-                            <FormLabel>Ingrédients actifs</FormLabel>
-                            <Input placeholder='Ingrédients actifs du médicament' value={name} onChange={handleNameChange} />
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>Instructions de dosage</FormLabel>
-                            <Input placeholder='Instructions de dosage  du médicaments' value={name} onChange={handleNameChange} />
-                        </FormControl>
-                        </Flex>
-
-                        <Flex gap={4} mt={4}>
-                        <FormControl>
-                            <FormLabel>Contre-indications</FormLabel>
-                            <Input placeholder='Contre-indications du médicament' value={name} onChange={handleNameChange} />
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>Effets secondaires</FormLabel>
-                            <Input placeholder='Effets secondaires  du médicaments' value={name} onChange={handleNameChange} />
-                        </FormControl>
-                        </Flex>
-
-                        <Flex gap={4} mt={4}>
-                        <FormControl>
-                            <FormLabel>Date d'expiration</FormLabel>
-                            <Input placeholder="Date d'expiration du médicament" value={name} onChange={handleNameChange} />
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>Fournisseur</FormLabel>
-                            <Input placeholder='Fournisseur du médicaments' value={name} onChange={handleNameChange} />
-                        </FormControl>
-                        </Flex>
 
                         <FormControl mt={4}>
-                            <FormLabel>Catégorie</FormLabel>
-                            <Input placeholder='Catégorie du médicaments' value={name} onChange={handleNameChange} />
+                            <FormLabel>Prix</FormLabel>
+                            <Input placeholder='Prix du medicament' value={price} onChange={handlePriceChange} />
+                        </FormControl>
+
+                        <FormControl mt={4}>
+                            <FormLabel>Pharmacies</FormLabel>
+                            <Select
+                                variant='filled'
+                                placeholder='Sélectionnez les pharmacies'
+                                value={selectedPharmacie}
+                                isMulti
+                                onChange={handlePharmacieChange}
+                                options={pharmacie}
+                                components={animatedComponents}
+                            />
                         </FormControl>
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button colorScheme='blue' mr={3} onClick={isEdit ? handleEditClick : handleAddClick} isLoading={loading} disabled={!name || !description || !selectedOffer.length}>
+                        <Button colorScheme='blue' mr={3} onClick={isEdit ? handleEditClick : handleAddClick} isLoading={loading} disabled={!name || !price || !selectedPharmacie.length}>
                             {isEdit ? "Modifier" : "Ajouter"}
                         </Button>
+
                         <Button colorScheme='red' onClick={handleCloseModal}>Annuler</Button>
                     </ModalFooter>
                 </ModalContent>
@@ -203,4 +158,4 @@ const MedicamentModal = ({ offers, loading, isEdit = false, selectedService, isO
     )
 }
 
-export default MedicamentModal;
+export default MedicamentsModal;

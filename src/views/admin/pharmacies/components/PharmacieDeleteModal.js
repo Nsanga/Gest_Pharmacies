@@ -15,12 +15,12 @@ import {
 } from "@chakra-ui/react";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
-import { deleteService } from "redux/service/action";
+import { deletePharmacie } from "redux/pharmacie/action";
 
-const PharmacieDeleteModal = ({ service, isOpen, onClose, loading }) => {
+const PharmacieDeleteModal = ({ pharmacie, isOpen, onClose, loading }) => {
     const dispatch = useDispatch();
     const handleDelete = () => {
-        dispatch(deleteService(service._id))
+        dispatch(deletePharmacie(pharmacie._id))
     }
 
     return (
