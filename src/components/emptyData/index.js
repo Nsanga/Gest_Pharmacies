@@ -1,6 +1,6 @@
 import { Flex, Image, Text, useColorModeValue } from '@chakra-ui/react'
 import React from 'react'
-import logo from '../../assets/img/logoMakeda.png'
+import logo from '../../assets/img/pharmacieUSSD.png'
 
 const EmptyData = () => {
     const dataColor = useColorModeValue("navy.700", "white");
