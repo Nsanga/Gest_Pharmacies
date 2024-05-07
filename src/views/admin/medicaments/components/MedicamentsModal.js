@@ -18,7 +18,7 @@ import {
     Radio,
     Flex,
 } from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
+import { AddIcon, DownloadIcon } from "@chakra-ui/icons";
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { InputGroup, InputLeftAddon } from "@chakra-ui/react";
@@ -42,7 +42,7 @@ const MedicamentsModal = ({ pharmacies, loading, isEdit = false, selectedMedicam
                 value: pharmacie._id,
                 label: pharmacie.name
             }));
-    
+
             setSelectedPharmacie(pharmacieArray);
             setPreviousSelectedPharmacie(pharmacieArray);
         }
@@ -96,17 +96,32 @@ const MedicamentsModal = ({ pharmacies, loading, isEdit = false, selectedMedicam
         onClose();
     };
 
+    const handleDownloadPDF = (pdfLink) => {
+        // Vous pouvez effectuer ici toute logique nécessaire avant de télécharger le PDF, si nécessaire
+        window.open(pdfLink, '_blank'); // Ouvre le lien dans une nouvelle fenêtre pour télécharger le PDF
+    };
+
     return (
         <Box>
             {!isEdit && (
-                <Button
-                    onClick={onOpen}
-                    leftIcon={<AddIcon />}
-                    colorScheme="blue"
-                    style={{ fontSize: "12px" }}
-                >
-                    AJOUTER
-                </Button>
+                <Flex gap={4}>
+                    <Button
+                        onClick={() => handleDownloadPDF(`http://sonarqube.alaxione.fr:4040/api/v1/medicament/download?`)}
+                        leftIcon={<DownloadIcon />}
+                        colorScheme="red"
+                        style={{ fontSize: "12px" }}
+                    >
+                        Télécharger
+                    </Button>
+                    <Button
+                        onClick={onOpen}
+                        leftIcon={<AddIcon />}
+                        colorScheme="blue"
+                        style={{ fontSize: "12px" }}
+                    >
+                        AJOUTER
+                    </Button>
+                </Flex>
             )}
 
             <Modal

@@ -42,78 +42,41 @@ const Pharmacie = ({ medicaments, loading, pharmacies }) => {
 
     return (
         <Card mt="100px">
-            <Tabs variant="enclosed">
-                <TabList>
-                    <Tab>Médicaments</Tab>
-                    <Tab>Suivi des médicaments</Tab>
-                </TabList>
-
-                <TabPanels>
-                    <TabPanel>
-                        <Flex justifyContent={"flex-end"} marginBottom={6}>
-                            <MedicamentModal
-                                isEdit={false}
-                                onOpen={() => setIsMedicamentsOpen(true)}
-                                isOpen={isMedicamentsOpen}
-                                onClose={() => setIsMedicamentsOpen(false)}
-                                medicaments={medicaments}
-                                pharmacies={pharmacies}
-                                loading={loading}
-                                handleAddService={handleAddService} />
-                        </Flex>
+            <Flex justifyContent={"flex-end"} marginBottom={6}>
+                <MedicamentModal
+                    isEdit={false}
+                    onOpen={() => setIsMedicamentsOpen(true)}
+                    isOpen={isMedicamentsOpen}
+                    onClose={() => setIsMedicamentsOpen(false)}
+                    medicaments={medicaments}
+                    pharmacies={pharmacies}
+                    loading={loading}
+                    handleAddService={handleAddService} />
+            </Flex>
+            {
+                loading ? (
+                    <Flex alignItems='center' justifyContent='center'>
+                        <Spinner color='blue.500' size='xl' />
+                    </Flex>
+                ) : (
+                    <>
                         {
-                            loading ? (
-                                <Flex alignItems='center' justifyContent='center'>
-                                    <Spinner color='blue.500' size='xl' />
-                                </Flex>
+                            medicaments.length === 0 ? (
+                                <EmptyData />
                             ) : (
-                                <>
-                                    {
-                                        medicaments.length === 0 ? (
-                                            <EmptyData />
-                                        ) : (
-                                            <Medicaments
-                                                mb="20px"
-                                                medicaments={medicaments}
-                                                pharmacies={pharmacies}
-                                                loading={loading}
-                                                isList
-                                            />
-                                        )
-                                    }
-
-                                </>
+                                <Medicaments
+                                    mb="20px"
+                                    medicaments={medicaments}
+                                    pharmacies={pharmacies}
+                                    loading={loading}
+                                    isList
+                                />
                             )
                         }
-                    </TabPanel>
-                    <TabPanel>
-                        {
-                            loading ? (
-                                <Flex alignItems='center' justifyContent='center'>
-                                    <Spinner color='blue.500' size='xl' />
-                                </Flex>
-                            ) : (
-                                <>
-                                    {
-                                        medicaments.length === 0 ? (
-                                            <EmptyData />
-                                        ) : (
-                                            <Medicaments
-                                                mb="20px"
-                                                loading={loading}
-                                                medicaments={medicaments}
-                                                isList={false}
-                                            />
-                                        )
-                                    }
 
-                                </>
-                            )
-                        }
-                    </TabPanel>
-                </TabPanels>
-            </Tabs>
-
+                    </>
+                )
+            }
         </Card>
     );
 }

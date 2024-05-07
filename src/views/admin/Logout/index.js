@@ -15,7 +15,7 @@ const Logout = () => {
     // Dispatch de l'action logoutSuccess pour mettre à jour l'état Redux
     dispatch(logoutSuccess());
     // Redirection vers l'écran de connexion
-    history.push('/auth/login');
+    window.location.href = "/auth/login"
   };
 
   // Appeler la fonction de déconnexion dès que le composant est rendu
