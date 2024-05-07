@@ -25,8 +25,20 @@ import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md';
 import { FaEthereum } from 'react-icons/fa';
 import routes from 'routes.js';
 import { ThemeEditor } from './ThemeEditor';
+import { useDispatch } from 'react-redux';
+import { logoutSuccess } from 'redux/login/action';
+
 export default function HeaderLinks(props) {
 	const { secondary } = props;
+	const adminName = localStorage.getItem('userName')
+	const dispatch = useDispatch();
+
+	const handleLogout = () => {
+		localStorage.removeItem('token');
+		localStorage.removeItem('userName');
+		dispatch(logoutSuccess());
+		window.location.href = "/auth/login"
+	};
 	// Chakra Color Mode
 	const navbarIcon = useColorModeValue('gray.400', 'white');
 	let menuBg = useColorModeValue('white', 'navy.800');
@@ -78,23 +90,18 @@ export default function HeaderLinks(props) {
 							fontSize="sm"
 							fontWeight="700"
 							color={textColor}>
-							👋&nbsp; Hey, Adela
+							👋&nbsp; Hey, {adminName}
 						</Text>
 					</Flex>
 					<Flex flexDirection="column" p="10px">
-						<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} borderRadius="8px" px="14px">
-							<Text fontSize="sm">Profile Settings</Text>
-						</MenuItem>
-						<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} borderRadius="8px" px="14px">
-							<Text fontSize="sm">Newsletter Settings</Text>
-						</MenuItem>
 						<MenuItem
+							onClick={handleLogout}
 							_hover={{ bg: 'none' }}
 							_focus={{ bg: 'none' }}
 							color="red.400"
 							borderRadius="8px"
 							px="14px">
-							<Text fontSize="sm">Log out</Text>
+							<Text fontSize="sm">Deconnexion</Text>
 						</MenuItem>
 					</Flex>
 				</MenuList>

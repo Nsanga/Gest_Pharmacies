@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import 'assets/css/App.css';
 import { HashRouter, Route, Switch, Redirect } from 'react-router-dom';
-// import AuthLayout from 'layouts/auth';
+import AuthLayout from 'layouts/auth';
 import AdminLayout from 'layouts/admin';
-// import isAuth from 'helper/isAuth';
-// import { connect } from 'react-redux';
+import isAuth from 'helper/isAuth';
+import { connect } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 
-const App = ({userAuth}) => {
-    // const[authenticate, setAuthenticate] = useState(false)
+const App = ({ userAuth }) => {
+    const [authenticate, setAuthenticate] = useState(false)
 
-    // useEffect(() => {
-    //     setAuthenticate(isAuth());
-    // }, [userAuth]);
+    useEffect(() => {
+        setAuthenticate(isAuth());
+    }, [userAuth]);
 
-    return ( 
+    return (
         <HashRouter>
             <Toaster position="bottom-center" reverseOrder={false} />
-            {/* {authenticate ? ( */}
+            {authenticate ? (
                 <Switch>
                     <Route exact path="/admin/dashboard" render={(props) => <AdminLayout {...props} />} />
                     <Route exact path="/admin/pharmacies" render={(props) => <AdminLayout {...props} />} />
@@ -27,20 +27,20 @@ const App = ({userAuth}) => {
 
                     <Redirect from='/' to='/admin/dashboard' />
                 </Switch>
-            {/* ) : ( */}
-                {/* <Switch>
+            ) : (
+                <Switch>
                     <Route exact path="/auth/login" render={(props) => <AuthLayout {...props} />} />
                     <Redirect to="/auth/login" />
-                </Switch> */}
-            {/* )} */}
+                </Switch>
+            )}
         </HashRouter>
     )
 }
 
-// const mapStateToProps = ({ DashboardReducer }) => ({
-//     userAuth: DashboardReducer.userAuth,
-//     loading: DashboardReducer.loading,
-//     error: DashboardReducer.error,
-//   });
-  
-  export default App;
+const mapStateToProps = ({ LoginReducer }) => ({
+    userAuth: LoginReducer.userAuth,
+    loading: LoginReducer.loading,
+    error: LoginReducer.error,
+});
+
+export default connect(mapStateToProps)(App);

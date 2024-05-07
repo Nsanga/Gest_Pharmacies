@@ -29,7 +29,7 @@ function* update(action) {
         const data = yield putUnauthRequest(link, action.payload.medicamentData);
         console.log("data:::/", data)
         if (data.message === "Success") {
-            yield put({ type: types.UPDATE_MEDICAMENT_SUCCESS, payload: data.data.product });
+            yield put({ type: types.UPDATE_MEDICAMENT_SUCCESS, payload: data.data.medicament });
             toast.success(data.data.message);
             yield put({ type: types.GET_MEDICAMENTS_REQUEST });
         } else {

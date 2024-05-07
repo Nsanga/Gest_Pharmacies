@@ -2,6 +2,7 @@ import React from "react";
 
 import { Icon } from "@chakra-ui/react";
 import {
+  MdEvent,
   MdHome,
   MdLocalHospital,
 } from "react-icons/md";
@@ -15,6 +16,7 @@ import Configuration from "views/admin/configuration";
 import Pharmacies from "views/admin/pharmacies";
 import Médicaments from "views/admin/medicaments";
 import Localités from "views/admin/localité";
+import SignIn from "views/auth/signIn/signIn";
 
 const routes = [
   {
@@ -54,6 +56,21 @@ const routes = [
     path: "/configuration",
     icon: <Icon as={LuSettings2} width='20px' height='20px' color='inherit' />,
     component: Configuration,
+  },
+  {
+    name: "Login",
+    layout: "/auth",
+    path: "/login",
+    icon: (
+      <Icon
+        as={MdEvent}
+        width='20px'
+        height='20px'
+        color='inherit'
+      />
+    ),
+    component: SignIn,
+    secondary: true,
   },
 ];
 

@@ -1,18 +1,51 @@
 // AddAccountModal.js
-import React, { useState } from 'react';
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import React, { useEffect, useState } from 'react';
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Button, FormControl, FormLabel, Input, InputRightElement, InputGroup } from "@chakra-ui/react";
 import { AddIcon } from '@chakra-ui/icons';
+import { IoEye, IoEyeOff } from 'react-icons/io5'
 
-const AddAccountModal = ({ isOpen, onClose, accountInfo, isEdit, onOpen }) => {
-    const [formData, setFormData] = useState(accountInfo);
+const AddAccountModal = ({ loading, isOpen, onClose, selectedUser, isEdit, onOpen, handleEditUser, handleAddUser }) => {
+    const [show, setShow] = useState(false)
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+    useEffect(() => {
+        if (selectedUser) {
+            setUsername(selectedUser.username || '');
+            setPassword(selectedUser.password || '');
+        }
+    }, [selectedUser]);
+
+    const handleClick = () => setShow(!show)
+
+    const handleChangeUsername = (e) => {
+        setUsername(e.target.value);
     };
 
-    const handleSubmit = () => {
-        // Logique de soumission du formulaire
+    const handleChangePassword = (e) => {
+        setPassword(e.target.value);
     };
+
+    const handleEditClick = () => {
+        handleEditUser(selectedUser._id, {
+            username,
+            password,
+        });
+    };
+
+    const handleAddClick = () => {
+        handleAddUser({
+            username,
+            password,
+        });
+        setUsername('');
+        setPassword('');
+    };
+
+    const handleCloseModal = () => {
+        onClose();
+    };
+
 
     return (
         <>
@@ -30,26 +63,37 @@ const AddAccountModal = ({ isOpen, onClose, accountInfo, isEdit, onOpen }) => {
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Ajouter un compte</ModalHeader>
+                    <ModalHeader>{isEdit ? "Modifier un compte" : "Ajouter un compte"}</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         <FormControl>
-                            <FormLabel>Login:</FormLabel>
-                            <Input type="text" id="login" name="login" onChange={handleChange} />
+                            <FormLabel>Nom d'utilisateur:</FormLabel>
+                            <Input type="text" value={username} placeholder="Entrer le nom d'utilisateur" onChange={handleChangeUsername} />
                         </FormControl>
-                        <FormControl>
-                            <FormLabel>Mot de passe:</FormLabel>
-                            <Input type="password" id="password" name="password" onChange={handleChange} />
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>Confirmation du mot de passe:</FormLabel>
-                            <Input type="password" id="confirmPassword" name="confirmPassword" onChange={handleChange} />
+                        <FormControl mt={4}>
+                            <FormLabel>Mot de passe</FormLabel>
+                            <InputGroup size='md'>
+                                <Input
+                                    pr='4.5rem'
+                                    type={show ? 'text' : 'password'}
+                                    placeholder='Entrer le mot de passe'
+                                    value={password}
+                                    onChange={handleChangePassword}
+                                />
+                                <InputRightElement width='4.5rem'>
+                                    <Button h='1.75rem' size='sm' onClick={handleClick}>
+                                        {show ? <IoEyeOff /> : <IoEye />}
+                                    </Button>
+                                </InputRightElement>
+                            </InputGroup>
                         </FormControl>
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button colorScheme="blue" mr={3} onClick={handleSubmit}>Ajouter</Button>
-                        <Button variant="ghost" onClick={onClose}>Fermer</Button>
+                        <Button colorScheme='blue' mr={3} onClick={isEdit ? handleEditClick : handleAddClick} isLoading={loading} disabled={!username || !password}>
+                            {isEdit ? "Modifier" : "Ajouter"}
+                        </Button>
+                        <Button colorScheme='red' onClick={onClose}>Fermer</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>

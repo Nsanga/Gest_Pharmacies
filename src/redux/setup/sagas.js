@@ -3,6 +3,7 @@ import PlateformeSaga from 'redux/plateforme/saga';
 import PharmacieSaga from 'redux/pharmacie/saga';
 import UserSaga from 'redux/user/saga';
 import MedicamentSaga from 'redux/medicament/saga';
+import LoginSaga from 'redux/login/saga';
 
 /**
  * @description combine sagas
@@ -13,5 +14,6 @@ export default function* Sagas() {
     PharmacieSaga(),
     MedicamentSaga(),
     UserSaga(),
+    LoginSaga()
   ]);
 }
