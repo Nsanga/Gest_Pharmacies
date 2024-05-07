@@ -1,6 +1,7 @@
 // Chakra Imports
 import {
 	Avatar,
+	Box,
 	Button,
 	Flex,
 	Icon,
@@ -30,15 +31,29 @@ import { logoutSuccess } from 'redux/login/action';
 
 export default function HeaderLinks(props) {
 	const { secondary } = props;
-	const adminName = localStorage.getItem('userName')
+	const adminName = localStorage.getItem('username')
 	const dispatch = useDispatch();
 
 	const handleLogout = () => {
 		localStorage.removeItem('token');
-		localStorage.removeItem('userName');
+		localStorage.removeItem('username');
 		dispatch(logoutSuccess());
 		window.location.href = "/auth/login"
 	};
+
+	const getInitials = (name) => {
+		const words = name.split(' ');
+		if (words.length === 1) {
+			return name.slice(0, 2).toUpperCase();
+		} else if (words.length >= 2) {
+			const firstWord = words[0].slice(0, 1).toUpperCase();
+			const secondWord = words[1].slice(0, 1).toUpperCase();
+			return `${firstWord}${secondWord}`;
+		} else {
+			return '';
+		}
+	};
+
 	// Chakra Color Mode
 	const navbarIcon = useColorModeValue('gray.400', 'white');
 	let menuBg = useColorModeValue('white', 'navy.800');
@@ -68,15 +83,22 @@ export default function HeaderLinks(props) {
 
 			<Menu>
 				<MenuButton p="0px">
-					<Avatar
+					<Box
 						_hover={{ cursor: 'pointer' }}
-						color="white"
-						name="Adela Parkson"
-						bg="#11047A"
+						bg="blue.500"
 						size="sm"
 						w="40px"
 						h="40px"
-					/>
+						display="flex"
+						justifyContent="center"
+						alignItems="center"
+						borderRadius="50%"
+						color="white"
+					>
+						<Text fontSize="md" fontWeight="bold">
+						{adminName && getInitials(adminName)}
+						</Text>
+					</Box>
 				</MenuButton>
 				<MenuList boxShadow={shadow} p="0px" mt="10px" borderRadius="20px" bg={menuBg} border="none">
 					<Flex w="100%" mb="0px">

@@ -7,7 +7,7 @@ import { Box, Flex, HStack, Text, useColorModeValue } from "@chakra-ui/react";
 export function SidebarLinks(props) {
   //   Chakra color mode
   let location = useLocation();
-  let activeColor = useColorModeValue("gray.700", "white");
+  let activeColor = useColorModeValue("blue.500", "white");
   let inactiveColor = useColorModeValue(
     "secondaryGray.600",
     "secondaryGray.600"

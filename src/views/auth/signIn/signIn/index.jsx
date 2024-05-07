@@ -51,6 +51,7 @@ const SignIn = ({ error }) => {
     setIsLoading(true);
 
     try {
+      console.log('username:', username)
       dispatch(loginRequest(username, password));
       // Simulez une attente (remplacez cela par votre logique de connexion réelle)
       await new Promise((resolve) => setTimeout(resolve, 2000));

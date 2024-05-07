@@ -22,8 +22,9 @@ const App = ({ userAuth }) => {
                     <Route exact path="/admin/dashboard" render={(props) => <AdminLayout {...props} />} />
                     <Route exact path="/admin/pharmacies" render={(props) => <AdminLayout {...props} />} />
                     <Route exact path="/admin/medicaments" render={(props) => <AdminLayout {...props} />} />
-                    <Route exact path="/admin/localités" render={(props) => <AdminLayout {...props} />} />
+                    <Route exact path="/admin/localities" render={(props) => <AdminLayout {...props} />} />
                     <Route exact path="/admin/configuration" render={(props) => <AdminLayout {...props} />} />
+                    <Route exact path="/admin/logout" render={(props) => <AdminLayout {...props} />} />
 
                     <Redirect from='/' to='/admin/dashboard' />
                 </Switch>

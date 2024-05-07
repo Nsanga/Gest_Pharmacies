@@ -1,16 +1,16 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import * as types from './types';
 import toast from 'react-hot-toast';
-import { getUnauthRequest } from 'helper/api';
+import { getRequest } from 'helper/api';
 import { url } from 'urlLoader';
-import { putUnauthRequest } from 'helper/api';
-import { postUnauthRequest } from 'helper/api';
-import { deleteUnauthRequest } from 'helper/api';
+import { putRequest } from 'helper/api';
+import { postRequest } from 'helper/api';
+import { deleteRequest } from 'helper/api';
 
 function* list() {
     try {
         let link = `${url}/api/v1/medicament/list`;
-        const data = yield getUnauthRequest(link);
+        const data = yield getRequest(link);
         if (data.message === "Success") {
             yield put({ type: types.GET_MEDICAMENTS_SUCCESS, payload: data });
         } else {
@@ -26,7 +26,7 @@ function* update(action) {
     const { id } = action.payload;
     try {
         let link = `${url}/api/v1/medicament/update?id=${id}`;
-        const data = yield putUnauthRequest(link, action.payload.medicamentData);
+        const data = yield putRequest(link, action.payload.medicamentData);
         console.log("data:::/", data)
         if (data.message === "Success") {
             yield put({ type: types.UPDATE_MEDICAMENT_SUCCESS, payload: data.data.medicament });
@@ -45,7 +45,7 @@ function* update(action) {
 function* add(action) {
     try {
         const link = `${url}/api/v1/medicament/add`;
-        const data = yield postUnauthRequest(link, JSON.stringify(action.payload));
+        const data = yield postRequest(link, JSON.stringify(action.payload));
         console.log('dataADD::', data)
 
         if (data) {
@@ -70,7 +70,7 @@ console.log('id', id)
     try {
         const link = `${url}/api/v1/medicament/delete?id=${id}`;
 
-        const data = yield deleteUnauthRequest(link);
+        const data = yield deleteRequest(link);
         if (data) {
             yield put({ type: types.DELETE_MEDICAMENT_SUCCESS, payload: data });
             toast.success(data.data.message);

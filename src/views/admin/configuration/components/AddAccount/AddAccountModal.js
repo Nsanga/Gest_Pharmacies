@@ -12,7 +12,6 @@ const AddAccountModal = ({ loading, isOpen, onClose, selectedUser, isEdit, onOpe
     useEffect(() => {
         if (selectedUser) {
             setUsername(selectedUser.username || '');
-            setPassword(selectedUser.password || '');
         }
     }, [selectedUser]);
 

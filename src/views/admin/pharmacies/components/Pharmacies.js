@@ -72,7 +72,7 @@ export default function Pharmacies(props) {
       {pharmacies?.map((pharmacie, index) => (
         <Card bg={bg} {...rest} p='14px'>
           <Flex direction={{ base: "column", md: "row" }} alignItems='center' justifyContent='center' key={index}>
-            <Box mt={{ base: "10px", md: "0" }} onClick={() => handlePharmacieClick(pharmacie)} cursor={isList ? '' : "pointer"} >
+            <Box mt={{ base: "10px", md: "0" }} onClick={() => handlePharmacieClick(pharmacie)} cursor="pointer" >
               <Text
                 color={textColorPrimary}
                 fontWeight='500'
@@ -85,13 +85,13 @@ export default function Pharmacies(props) {
                   fontWeight='500'
                   color={textColorSecondary}
                   fontSize='md'>
-                  {pharmacie.type}
+                  {pharmacie.adress}
                 </Text>
                 <Text
                   fontWeight='500'
                   color={textColorSecondary}
                   fontSize='md'>
-                  {pharmacie.email}
+                  |
                 </Text>
                 <Text
                   fontWeight='500'
@@ -99,72 +99,34 @@ export default function Pharmacies(props) {
                   fontSize='md'>
                   {pharmacie.phone}
                 </Text>
-                <Text
-                  fontWeight='500'
-                  color={textColorSecondary}
-                  fontSize='md'>
-                  {pharmacie.locality}
-                </Text>
-                <Text
-                  fontWeight='500'
-                  color={textColorSecondary}
-                  fontSize='md'>
-                  {pharmacie.adress}
-                </Text>
-                <Text
-                  fontWeight='500'
-                  color={textColorSecondary}
-                  fontSize='md'>
-                  {pharmacie.OpenHour} - {pharmacie.CloseHour}
-                </Text>
               </Flex>
             </Box>
-            {isList && (
-              <Flex
-                me="16px"
-                ms="auto"
-                p="0px !important"
-                gap={4}
-              >
-                <Icon
-                  as={MdEdit}
-                  color='blue.500'
-                  h='24px' w='24px'
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => handleEditClick(pharmacie)}
-                />
-                <Icon
-                  as={MdDelete}
-                  color='red.500'
-                  h='24px' w='24px'
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => handlePharmacieDeleteClick(pharmacie)}
-                />
-              </Flex>
-            )}
 
-            {isList === false && (
-              <Flex
-                me="16px"
-                ms="auto"
-                p="0px !important"
-                gap={4}
-              >
-                <Icon
-                  as={FaFilePdf}
-                  color='red.500'
-                  h='24px'
-                  w='24px'
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => handleDownloadPDF(`http://sonarqube.alaxione.fr:4040/api/v1/pharmacie/download?id=${pharmacie._id}`)}
-                />
-              </Flex>
-            )}
-
+            <Flex
+              me="16px"
+              ms="auto"
+              p="0px !important"
+              gap={4}
+            >
+              <Icon
+                as={MdEdit}
+                color='blue.500'
+                h='24px' w='24px'
+                style={{ cursor: 'pointer' }}
+                onClick={() => handleEditClick(pharmacie)}
+              />
+              <Icon
+                as={MdDelete}
+                color='red.500'
+                h='24px' w='24px'
+                style={{ cursor: 'pointer' }}
+                onClick={() => handlePharmacieDeleteClick(pharmacie)}
+              />
+            </Flex>
           </Flex>
         </Card>
       ))}
-      {selectedPharmacie && isList === false && (
+      {selectedPharmacie && (
         <ServiceDetailModal pharmacie={selectedPharmacie} onClose={handleCloseModal} />
       )}
       {selectedPharmacieEdit && (

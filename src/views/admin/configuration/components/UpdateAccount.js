@@ -6,11 +6,13 @@ const UpdateAccount = () => {
     const [show, setShow] = React.useState(false)
     const handleClick = () => setShow(!show)
 
+    const username = localStorage.getItem('username');
+
     return (
         <Box>
             <FormControl>
-                <FormLabel>Login</FormLabel>
-                <Input placeholder="Votre nom d'utilisateur" />
+                <FormLabel>Nom d'utilisateur</FormLabel>
+                <Input defaultValue={username} placeholder="Votre nom d'utilisateur" />
             </FormControl>
 
             <FormControl mt={4}>

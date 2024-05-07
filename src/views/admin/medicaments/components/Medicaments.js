@@ -72,7 +72,7 @@ export default function Medicaments(props) {
       {medicaments?.map((medicament, index) => (
         <Card bg={bg} {...rest} p='14px'>
           <Flex direction={{ base: "column", md: "row" }} key={index}>
-            <Box mt={{ base: "10px", md: "0" }} onClick={() => handleMedicamentClick(medicament)} cursor={isList ? '' : "pointer"} >
+            <Box mt={{ base: "10px", md: "0" }} onClick={() => handleMedicamentClick(medicament)} cursor= "pointer" >
               <Text
                 color={textColorPrimary}
                 fontWeight='500'
@@ -89,7 +89,6 @@ export default function Medicaments(props) {
                 </Text>
               </Flex>
             </Box>
-            {isList && (
               <Flex
                 me="16px"
                 ms="auto"
@@ -111,30 +110,11 @@ export default function Medicaments(props) {
                   onClick={() => handleMedicamentDeleteClick(medicament)}
                 />
               </Flex>
-            )}
-
-            {isList === false && (
-              <Flex
-                me="16px"
-                ms="auto"
-                p="0px !important"
-                gap={4}
-              >
-                <Icon
-                  as={FaFilePdf}
-                  color='red.500'
-                  h='24px'
-                  w='24px'
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => handleDownloadPDF(`http://sonarqube.alaxione.fr:4040/api/v1/medicament/download?id=${medicament._id}`)}
-                />
-              </Flex>
-            )}
 
           </Flex>
         </Card>
       ))}
-      {selectedMedicament && isList === false && (
+      {selectedMedicament && (
         <ServiceDetailModal medicament={selectedMedicament} onClose={handleCloseModal} />
       )}
       {selectedMedicamentEdit && (

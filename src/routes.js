@@ -5,6 +5,7 @@ import {
   MdEvent,
   MdHome,
   MdLocalHospital,
+  MdLogout
 } from "react-icons/md";
 import { FaHandHoldingMedical, FaUsers } from "react-icons/fa";
 import { BiSolidLocationPlus } from "react-icons/bi";
@@ -17,12 +18,13 @@ import Pharmacies from "views/admin/pharmacies";
 import Médicaments from "views/admin/medicaments";
 import Localités from "views/admin/localité";
 import SignIn from "views/auth/signIn/signIn";
+import Logout from "views/admin/Logout";
 
 const routes = [
   {
     name: "Dashboard",
     layout: "/admin",
-    path: "/default",
+    path: "/dashboard",
     icon: <Icon as={MdHome} width='20px' height='20px' color='inherit' />,
     component: MainDashboard,
   },
@@ -46,7 +48,7 @@ const routes = [
   {
     name: "Localités",
     layout: "/admin",
-    path: "/localités",
+    path: "/localities",
     icon: <Icon as={BiSolidLocationPlus} width='20px' height='20px' color='inherit' />,
     component: Localités,
   },
@@ -56,6 +58,21 @@ const routes = [
     path: "/configuration",
     icon: <Icon as={LuSettings2} width='20px' height='20px' color='inherit' />,
     component: Configuration,
+  },
+  {
+    name: "Déconnexion",
+    layout: "/admin",
+    path: "/logout",
+    icon: (
+      <Icon
+        as={MdLogout}
+        width='20px'
+        height='20px'
+        color='inherit'
+      />
+    ),
+    component: Logout,
+    secondary: true,
   },
   {
     name: "Login",
